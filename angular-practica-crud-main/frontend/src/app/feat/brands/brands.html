@@ -1,0 +1,25 @@
+<section class="marcas">
+    <h1>Listado de Marcas</h1>
+  <p *ngIf="loading">Cargando coches...</p>
+
+  <p *ngIf="error" class="error">
+    {{ error }}
+  </p>
+  <table *ngIf="!loading && !error && brands.length > 0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let brand of brands">
+            <td> {{ brand.id }} </td>
+            <td> {{ brand.name }} </td>
+        </tr>
+    </tbody>
+  </table>
+    <p *ngIf="!loading && !error && brands.length === 0">
+    No hay marcas disponibles.
+  </p>
+</section>

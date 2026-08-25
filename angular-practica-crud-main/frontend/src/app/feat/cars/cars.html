@@ -1,0 +1,62 @@
+<section class="coches">
+  <h1>Listado de coches</h1>
+
+  <p *ngIf="loading">Cargando coches...</p>
+
+  <p *ngIf="error" class="error">
+    {{ error }}
+  </p>
+
+  <table *ngIf="!loading && !error && coches.length > 0">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let coche of coches">
+        <td>
+          <img
+            [src]="coche.imageUrl"
+            [alt]="coche.brand.name + ' ' + coche.model.name"
+            width="120"
+          />
+        </td>
+        <td>{{ coche.brand.name }}</td>
+        <td>{{ coche.model.name }}</td>
+        <td>{{ coche.total }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && !error && coches.length === 0">
+    No hay coches disponibles.
+  </p>
+
+  <div *ngIf="meta && !loading" class="paginacion">
+    <button
+      type="button"
+      (click)="paginaAnterior()"
+      [disabled]="!meta.hasPreviousPage"
+    >
+      Anterior
+    </button>
+
+    <span>
+      Página {{ meta.currentPage }} de {{ meta.totalPages }}
+      · {{ meta.totalItems }} coches
+    </span>
+
+    <button
+      type="button"
+      (click)="paginaSiguiente()"
+      [disabled]="!meta.hasNextPage"
+    >
+      Siguiente
+    </button>
+  </div>
+</section>
