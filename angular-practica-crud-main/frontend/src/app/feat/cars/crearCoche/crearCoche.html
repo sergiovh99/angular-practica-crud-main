@@ -1,0 +1,132 @@
+<section>
+<h1>Crear coche</h1>
+
+<form [formGroup]="formulario" (ngSubmit)="guardar()">
+
+  <div>
+    <label for="brandId">ID de marca</label>
+    <input id="brandId" type="text" formControlName="brandId">
+  </div>
+
+  <div>
+    <label for="modelId">ID de modelo</label>
+    <input id="modelId" type="text" formControlName="modelId">
+  </div>
+
+  <section formArrayName="carDetails">
+    <h2>Detalles del coche</h2>
+
+    <div
+      *ngFor="let detalle of carDetails.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <h3>Detalle {{ i + 1 }}</h3>
+
+      <div>
+        <label [for]="'licensePlate-' + i">Matrícula</label>
+        <input
+          [id]="'licensePlate-' + i"
+          type="text"
+          formControlName="licensePlate"
+        >
+      </div>
+
+      <div>
+        <label [for]="'manufactureYear-' + i">Año de fabricación</label>
+        <input
+          [id]="'manufactureYear-' + i"
+          type="number"
+          formControlName="manufactureYear"
+        >
+      </div>
+
+      <div>
+        <label [for]="'mileage-' + i">Kilometraje</label>
+        <input
+          [id]="'mileage-' + i"
+          type="number"
+          formControlName="mileage"
+        >
+      </div>
+
+      <div>
+        <label [for]="'price-' + i">Precio</label>
+        <input
+          [id]="'price-' + i"
+          type="number"
+          formControlName="price"
+        >
+      </div>
+
+      <div>
+        <label [for]="'currency-' + i">Moneda</label>
+        <select [id]="'currency-' + i" formControlName="currency">
+          <option value="EUR">EUR</option>
+          <option value="USD">USD</option>
+        </select>
+      </div>
+
+      <div>
+        <label [for]="'registrationDate-' + i">Fecha de matriculación</label>
+        <input
+          [id]="'registrationDate-' + i"
+          type="date"
+          formControlName="registrationDate"
+        >
+      </div>
+
+      <div>
+        <label [for]="'color-' + i">Color</label>
+        <input
+          [id]="'color-' + i"
+          type="text"
+          formControlName="color"
+        >
+      </div>
+
+      <div>
+        <label [for]="'description-' + i">Descripción</label>
+        <textarea
+          [id]="'description-' + i"
+          formControlName="description"
+        ></textarea>
+      </div>
+
+      <div>
+        <label [for]="'imageUrl-' + i">Ruta de la imagen</label>
+        <input
+          [id]="'imageUrl-' + i"
+          type="text"
+          placeholder="/images/car_images/coche.webp"
+          formControlName="imageUrl"
+        >
+      </div>
+
+      <label>
+        <input type="checkbox" formControlName="availability">
+        Disponible
+      </label>
+
+      <button
+        type="button"
+        (click)="eliminarDetalle(i)"
+        [disabled]="carDetails.length === 1"
+      >
+        Eliminar detalle
+      </button>
+
+      <hr>
+    </div>
+  </section>
+
+  <button type="button" (click)="agregarDetalle()">
+    Añadir otro detalle
+  </button>
+
+  <p *ngIf="error">{{ error }}</p>
+
+  <button type="submit" [disabled]="loading">
+    {{ loading ? 'Guardando...' : 'Crear coche' }}
+  </button>
+</form>
+</section>

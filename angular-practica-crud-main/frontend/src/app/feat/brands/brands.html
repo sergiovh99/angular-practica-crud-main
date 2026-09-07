@@ -1,25 +1,49 @@
 <section class="marcas">
-    <h1>Listado de Marcas</h1>
-  <p *ngIf="loading">Cargando coches...</p>
-
-  <p *ngIf="error" class="error">
-    {{ error }}
-  </p>
-  <table *ngIf="!loading && !error && brands.length > 0">
+    <div class="title">
+  <h1>Listado de Marcas</h1>
+  <a routerLink="/" aria-label="Ir a Home">
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>home</title><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/></svg>  </a>
+</div>
+<div *ngIf="loading">
+<h1>Cargando...</h1>
+</div> 
+<div  class="container" *ngIf="!loading">
+  <table class="tabla-marcas">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Nombre</th>
+            <th> <button
+        type="button"
+        class="ordenable"
+        (click)="ordenarPor('id')"
+        [attr.aria-sort]="campoOrdenado === 'id' ? direccionOrden : 'none'"
+      >
+        ID
+        <span *ngIf="campoOrdenado === 'id'">
+          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+        </span>
+      </button></th>
+            <th><button
+        type="button"
+        class="ordenable"
+        (click)="ordenarPor('nombre')"
+        [attr.aria-sort]="campoOrdenado === 'nombre' ? direccionOrden : 'none'"
+      >
+        Nombre
+        <span *ngIf="campoOrdenado === 'nombre'">
+          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+        </span>
+      </button></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="celdas">
         <tr *ngFor="let brand of brands">
-            <td> {{ brand.id }} </td>
-            <td> {{ brand.name }} </td>
+            <td data-label="ID"> {{ brand.id }} </td>
+            <td data-label="Nombre"> {{ brand.name }} </td>
         </tr>
     </tbody>
   </table>
-    <p *ngIf="!loading && !error && brands.length === 0">
-    No hay marcas disponibles.
+</div>
+  <p *ngIf="!loading && !error && brands.length === 0">
+    No hay coches disponibles.
   </p>
 </section>

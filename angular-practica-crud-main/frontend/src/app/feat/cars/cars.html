@@ -1,62 +1,85 @@
 <section class="coches">
-  <h1>Listado de coches</h1>
-
-  <p *ngIf="loading">Cargando coches...</p>
-
-  <p *ngIf="error" class="error">
-    {{ error }}
-  </p>
-
-  <table *ngIf="!loading && !error && coches.length > 0">
+  <div class="title">
+  <h1 class="textTitle">Listado de coches</h1>
+  <a routerLink="/" aria-label="Ir a Home" class="homeIcon">  
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>home</title><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/></svg>  </a>
+</div>
+<div *ngIf="loading">
+<h1>Cargando...</h1>
+</div>
+<div class="container" *ngIf="!loading">
+  <table class="tabla-coches">
     <thead>
       <tr>
         <th>Imagen</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Total</th>
-      </tr>
+        <th> 
+          <button
+        type="button"
+        class="ordenable"
+        (click)="ordenarPor('marca')"
+        [attr.aria-sort]="campoOrdenado === 'marca' ? direccionOrden : 'none'"
+      >
+        Marca
+        <span *ngIf="campoOrdenado === 'marca'">
+          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+        </span>
+      </button></th>
+        <th> <button
+        type="button"
+        class="ordenable"
+        (click)="ordenarPor('modelo')"
+        [attr.aria-sort]="campoOrdenado === 'modelo' ? direccionOrden : 'none'"
+      >
+        Modelo
+        <span *ngIf="campoOrdenado === 'modelo'">
+          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+        </span>
+      </button></th>
+        <th> <button
+        type="button"
+        class="ordenable"
+        (click)="ordenarPor('total')"
+        [attr.aria-sort]="campoOrdenado === 'total' ? direccionOrden : 'none'"
+      >
+        Total
+        <span *ngIf="campoOrdenado === 'total'">
+          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+        </span>
+      </button></th>
+      <th >Ir al detalle</th>
+          <th>
+        <a routerLink="/cars/new">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>add</title><path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"/></svg>
+        </a>
+      </th>
+    </tr>
+
     </thead>
 
-    <tbody>
+    <tbody class="celdas">
       <tr *ngFor="let coche of coches">
-        <td>
+        <td class="image" data-label="Imagen">
           <img
-            [src]="coche.imageUrl"
+            [ngSrc]="coche.imageUrl"
             [alt]="coche.brand.name + ' ' + coche.model.name"
-            width="120"
+            width="100"
+            height="70"
+            priority
           />
         </td>
-        <td>{{ coche.brand.name }}</td>
-        <td>{{ coche.model.name }}</td>
-        <td>{{ coche.total }}</td>
+        <td class="marca" data-label="Marca">{{ coche.brand.name }}</td>
+        <td data-label="Modelo">{{ coche.model.name }}</td>
+        <td data-label="Total">{{ coche.total }}</td>
+        <td data-label="Ir al detalle" class="detalle">
+          <a [routerLink]="['/coches', coche.id]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>arrow-right</title><path fill="#000000" d="M4 11v2h12l-5.5 5.5l1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5L16 11z"/></svg>
+          </a>
+        </td>
       </tr>
     </tbody>
   </table>
-
+</div>
   <p *ngIf="!loading && !error && coches.length === 0">
     No hay coches disponibles.
   </p>
-
-  <div *ngIf="meta && !loading" class="paginacion">
-    <button
-      type="button"
-      (click)="paginaAnterior()"
-      [disabled]="!meta.hasPreviousPage"
-    >
-      Anterior
-    </button>
-
-    <span>
-      Página {{ meta.currentPage }} de {{ meta.totalPages }}
-      · {{ meta.totalItems }} coches
-    </span>
-
-    <button
-      type="button"
-      (click)="paginaSiguiente()"
-      [disabled]="!meta.hasNextPage"
-    >
-      Siguiente
-    </button>
-  </div>
 </section>

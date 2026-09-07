@@ -1,0 +1,41 @@
+<section *ngIf="coche?.carDetails?.[0] as detalle">
+   <div class="title">
+  <h1 class="textTitle">Listado de coches</h1>
+  <a routerLink="/cars">
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>arrow-left</title><path fill="currentColor" d="M20 11v2H8l5.5 5.5l-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5L8 11z"/></svg> </a>
+  <a routerLink="/" aria-label="Ir a Home" class="homeIcon">  
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>home</title><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/></svg>  </a>
+</div>
+<div *ngIf="loading">
+<h1>Cargando...</h1>
+</div> 
+<div *ngIf="!loading">
+  <img
+    [src]="'http://localhost:3000' + detalle.imageUrl"
+    [alt]="coche?.brand?.name + ' ' + coche?.model?.name"
+    width="500"
+  >
+
+  <p>
+    <strong>Disponible:</strong>
+    {{ detalle.availability ? 'Sí' : 'No' }}
+  </p>
+
+  <p><strong>Matrícula:</strong> {{ detalle.licensePlate }}</p>
+  <p><strong>Año:</strong> {{ detalle.manufactureYear }}</p>
+  <p><strong>Kilometraje:</strong> {{ detalle.mileage | number }} km</p>
+
+  <p>
+    <strong>Precio:</strong>
+    {{ detalle.price | currency: detalle.currency }}
+  </p>
+
+  <p>
+    <strong>Fecha de matriculación:</strong>
+    {{ detalle.registrationDate | date:'dd/MM/yyyy' }}
+  </p>
+
+  <p><strong>Color:</strong> {{ detalle.color }}</p>
+  <p><strong>Descripción:</strong> {{ detalle.description }}</p>
+  </div>
+</section>

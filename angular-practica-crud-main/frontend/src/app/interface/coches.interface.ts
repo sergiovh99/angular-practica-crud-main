@@ -7,6 +7,17 @@ export interface Modelo {
   id: string;
   name: string;
 }
+export interface CarDetail{
+  availability: boolean;
+  currency: string;
+  licensePlate: string;
+  manufactureYear: number;
+  mileage: number;
+  price: number;
+  registrationDate: string;
+  color: string;
+  description: string;
+  imageUrl: string;}
 
 export interface Coche {
   id: string;
@@ -14,6 +25,7 @@ export interface Coche {
   model: Modelo;
   total: number;
   imageUrl: string;
+  carDetails: CarDetail[];
 }
 
 export interface MetaPaginacion {
