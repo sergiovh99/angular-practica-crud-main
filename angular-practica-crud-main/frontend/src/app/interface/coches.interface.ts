@@ -11,7 +11,7 @@ export interface CarDetail{
   availability: boolean;
   currency: string;
   licensePlate: string;
-  manufactureYear: number;
+  manufactureYear: string;
   mileage: number;
   price: number;
   registrationDate: string;

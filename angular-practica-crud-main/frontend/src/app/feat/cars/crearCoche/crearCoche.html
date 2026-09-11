@@ -28,7 +28,9 @@
           [id]="'licensePlate-' + i"
           type="text"
           formControlName="licensePlate"
+          placeholder="1234 ABC"
         >
+        
       </div>
 
       <div>
@@ -61,8 +63,7 @@
       <div>
         <label [for]="'currency-' + i">Moneda</label>
         <select [id]="'currency-' + i" formControlName="currency">
-          <option value="EUR">EUR</option>
-          <option value="USD">USD</option>
+          <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
         </select>
       </div>
 
@@ -81,6 +82,7 @@
           [id]="'color-' + i"
           type="text"
           formControlName="color"
+          class="input"
         >
       </div>
 
@@ -90,16 +92,6 @@
           [id]="'description-' + i"
           formControlName="description"
         ></textarea>
-      </div>
-
-      <div>
-        <label [for]="'imageUrl-' + i">Ruta de la imagen</label>
-        <input
-          [id]="'imageUrl-' + i"
-          type="text"
-          placeholder="/images/car_images/coche.webp"
-          formControlName="imageUrl"
-        >
       </div>
 
       <label>

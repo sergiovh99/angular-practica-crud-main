@@ -3,7 +3,6 @@ import { HomeComponent } from './home/home.component';
 import { CarsComponent } from './feat/cars/cars.component';
 import { BrandsComponent } from './feat/brands/brands.component';
 import { CocheDetalleComponent } from './feat/cars/cocheDetalle/cocheDetalle.component';
-import { CrearCocheComponent } from './feat/cars/crearCoche/crearCoche.component';
 
 export const routes: Routes = [
         {
@@ -20,8 +19,8 @@ export const routes: Routes = [
     component: BrandsComponent,
 
   },
-  { path: 'coches/:id', component: CocheDetalleComponent },  
-  { path: 'cars/new', component: CrearCocheComponent },
+  { path: 'cars/new', component: CocheDetalleComponent },  
+  { path: 'cars/:id', component: CocheDetalleComponent },
 
  {
     path: '**',

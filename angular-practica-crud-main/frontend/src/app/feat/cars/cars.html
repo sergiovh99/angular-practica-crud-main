@@ -48,7 +48,7 @@
       </button></th>
       <th >Ir al detalle</th>
           <th>
-        <a routerLink="/cars/new">
+        <a [routerLink]="['/cars/new']">
           <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>add</title><path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"/></svg>
         </a>
       </th>
@@ -71,7 +71,7 @@
         <td data-label="Modelo">{{ coche.model.name }}</td>
         <td data-label="Total">{{ coche.total }}</td>
         <td data-label="Ir al detalle" class="detalle">
-          <a [routerLink]="['/coches', coche.id]">
+          <a [routerLink]="['/cars', coche.id]">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>arrow-right</title><path fill="#000000" d="M4 11v2h12l-5.5 5.5l1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5L16 11z"/></svg>
           </a>
         </td>

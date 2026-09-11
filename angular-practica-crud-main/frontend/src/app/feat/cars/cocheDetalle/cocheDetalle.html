@@ -1,41 +1,158 @@
-<section *ngIf="coche?.carDetails?.[0] as detalle">
-   <div class="title">
-  <h1 class="textTitle">Listado de coches</h1>
-  <a routerLink="/cars">
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>arrow-left</title><path fill="currentColor" d="M20 11v2H8l5.5 5.5l-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5L8 11z"/></svg> </a>
-  <a routerLink="/" aria-label="Ir a Home" class="homeIcon">  
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>home</title><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/></svg>  </a>
-</div>
-<div *ngIf="loading">
-<h1>Cargando...</h1>
-</div> 
-<div *ngIf="!loading">
-  <img
-    [src]="'http://localhost:3000' + detalle.imageUrl"
-    [alt]="coche?.brand?.name + ' ' + coche?.model?.name"
-    width="500"
-  >
+<section>
+  <div class="title">
+    <h1 class="textTitle">
+      {{ cocheFlag ? 'Nuevo coche' : 'Editar coche' }}
+    </h1>
 
-  <p>
-    <strong>Disponible:</strong>
-    {{ detalle.availability ? 'Sí' : 'No' }}
-  </p>
+    <a routerLink="/cars" aria-label="Volver a coches">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <title>Volver</title>
+        <path fill="currentColor" d="M20 11v2H8l5.5 5.5l-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5L8 11z"/>
+      </svg>
+    </a>
 
-  <p><strong>Matrícula:</strong> {{ detalle.licensePlate }}</p>
-  <p><strong>Año:</strong> {{ detalle.manufactureYear }}</p>
-  <p><strong>Kilometraje:</strong> {{ detalle.mileage | number }} km</p>
-
-  <p>
-    <strong>Precio:</strong>
-    {{ detalle.price | currency: detalle.currency }}
-  </p>
-
-  <p>
-    <strong>Fecha de matriculación:</strong>
-    {{ detalle.registrationDate | date:'dd/MM/yyyy' }}
-  </p>
-
-  <p><strong>Color:</strong> {{ detalle.color }}</p>
-  <p><strong>Descripción:</strong> {{ detalle.description }}</p>
+    <a routerLink="/" aria-label="Ir a inicio" class="homeIcon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <title>Inicio</title>
+        <path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/>
+      </svg>
+    </a>
   </div>
+
+  <div *ngIf="loading">
+    <h1>Cargando...</h1>
+  </div>
+
+  <form
+    *ngIf="!loading"
+    [formGroup]="formulario"
+    (ngSubmit)="guardar()"
+  >
+    <div>
+      <label for="brandId">ID de marca</label>
+      <input id="brandId" type="text" formControlName="brandId">
+    </div>
+
+    <div>
+      <label for="modelId">ID de modelo</label>
+      <input id="modelId" type="text" formControlName="modelId">
+    </div>
+
+    <section formArrayName="carDetails">
+      <h2>Detalles del coche</h2>
+
+      <div
+        *ngFor="let detalle of carDetails.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <h3>Detalle {{ i + 1 }}</h3>
+
+        <div>
+          <label [for]="'licensePlate-' + i">Matrícula</label>
+          <input
+            [id]="'licensePlate-' + i"
+            type="text"
+            formControlName="licensePlate"
+            placeholder="1234 ABC"
+            min="7"
+            max="7"
+          >
+        </div>
+
+ <div>
+  <label [for]="'manufactureYear-' + i">Año de fabricación</label>
+
+  <select
+    [id]="'manufactureYear-' + i"
+    formControlName="manufactureYear"
+  >
+    <option [ngValue]="null" disabled>Selecciona un año</option>
+
+    <option *ngFor="let year of years" [ngValue]="year">
+      {{ year }}
+    </option>
+  </select>
+</div>
+
+        <div>
+          <label [for]="'mileage-' + i">Kilometraje</label>
+          <input
+            [id]="'mileage-' + i"
+            type="number"
+            formControlName="mileage"
+            min = "0"
+          >
+        </div>
+
+        <div>
+          <label [for]="'price-' + i">Precio</label>
+          <input
+            [id]="'price-' + i"
+            type="number"
+            formControlName="price"
+            min="1"
+          >
+        </div>
+
+        <div>
+          <label [for]="'currency-' + i">Moneda</label>
+          <select [id]="'currency-' + i" formControlName="currency">
+            <option *ngFor="let currency of currencies" [value]="currency">
+              {{ currency }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label [for]="'registrationDate-' + i">Fecha de matriculación</label>
+          <input
+            [id]="'registrationDate-' + i"
+            type="date"
+            formControlName="registrationDate"
+          >
+        </div>
+
+        <div>
+          <label [for]="'color-' + i">Color</label>
+          <input
+            [id]="'color-' + i"
+            type="text"
+            formControlName="color"
+          >
+        </div>
+
+        <div>
+          <label [for]="'description-' + i">Descripción</label>
+          <textarea
+            [id]="'description-' + i"
+            formControlName="description"
+          ></textarea>
+        </div>
+
+        <label>
+          <input type="checkbox" formControlName="availability">
+          Disponible
+        </label>
+
+        <button
+          type="button"
+          (click)="eliminarDetalle(i)"
+        >
+          Eliminar detalle
+        </button>
+
+        <hr>
+      </div>
+    </section>
+
+    <button type="button" (click)="agregarDetalle()">
+      Añadir otro detalle
+    </button>
+
+    <p *ngIf="error">{{ error }}</p>
+
+    <button type="submit" [disabled]="loading || formulario.invalid">
+      {{ loading ? 'Guardando...' : (cocheFlag ? 'Crear coche' : 'Guardar cambios') }}
+    </button>
+  </form>
 </section>

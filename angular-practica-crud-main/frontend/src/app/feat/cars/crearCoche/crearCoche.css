@@ -1,0 +1,7 @@
+.input-error{
+    border: 2px solid #dc3545 ;
+    outline: none;
+}
+input{
+border: 1px solid;
+}

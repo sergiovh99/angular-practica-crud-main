@@ -16,13 +16,21 @@ import { CarsService } from '../../../service/CarsService.service';
   selector: 'app-crearCoche',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './crearCoche.html'
+  templateUrl: './crearCoche.html',
+    styleUrl: './crearCoche.css'
+
 })
 export class CrearCocheComponent {
   loading = false;
   error = '';
   formulario: FormGroup;
-
+  currencies: string[] = [
+    'EUR', 'GBP', 'CHF', 'SEK', 'NOK', 'DKK', 'PLN', 'CZK', 'HUF',
+    'RON', 'BGN', 'HRK', 'ARS', 'BRL', 'CLP', 'COP', 'PEN', 'UYU',
+    'PYG', 'BOB', 'VES', 'USD', 'CAD', 'MXN', 'JPY', 'CNY', 'INR',
+    'KRW', 'SGD', 'HKD', 'MYR', 'IDR', 'THB', 'VND', 'PKR', 'AUD',
+    'NZD', 'ZAR', 'EGP', 'NGN', 'KES', 'GHS'
+  ];
   constructor(
     private formBuilder: FormBuilder,
     private carsService: CarsService,
@@ -47,17 +55,16 @@ export class CrearCocheComponent {
     return this.formBuilder.group({
       availability: [true],
       currency: ['EUR', Validators.required],
-      licensePlate: ['', Validators.required],
+      licensePlate: ['', [Validators.required, Validators.pattern(/^[0-9]{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}$/)]],
       manufactureYear: [
         new Date().getFullYear(),
-        [Validators.required, Validators.min(1900)]
+        [Validators.required, Validators.min(1900), Validators.max(2026)]
       ],
-      mileage: [0, [Validators.required, Validators.min(0)]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      registrationDate: ['', Validators.required],
+      mileage: [, [Validators.required, Validators.min(1)]],
+      price: [, [Validators.required, Validators.min(1)]],
+      registrationDate: ['', Validators.required, Validators.pattern('YYYY-MM-DDTHH:MM:SS.mmmZ')],
       color: ['', Validators.required],
-      description: ['', Validators.required],
-      imageUrl: ['', Validators.required]
+      description: [''],
     });
   }
 
