@@ -3,10 +3,20 @@ import { HomeComponent } from './home/home.component';
 import { CarsComponent } from './feat/cars/cars.component';
 import { BrandsComponent } from './feat/brands/brands.component';
 import { CocheDetalleComponent } from './feat/cars/cocheDetalle/cocheDetalle.component';
+import { LoginComponent } from './feat/login/login.component';
 
 export const routes: Routes = [
-        {
+    {
     path: '',
+    pathMatch: 'full',
+    redirectTo: 'login'
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+        {
+    path: 'home',
     component: HomeComponent,
     },
  {
@@ -24,6 +34,6 @@ export const routes: Routes = [
 
  {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'login',
   },
 ];

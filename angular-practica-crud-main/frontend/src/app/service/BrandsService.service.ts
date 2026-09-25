@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Brands } from '../interface/brands.interface';
+import { Modelo } from '../interface/coches.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -20,4 +21,14 @@ export class BrandsService {
     }
     return this.http.get<Brands[]>(this.apiUrl, {params});
   }
+getModelsByBrandId(brandId: string): Observable<Modelo[]> {
+  return this.http.get<Modelo[]>(
+    `${this.apiUrl}/${brandId}/models`
+  );
+}
+  getModels(): Observable<Modelo[]> {
+        return this.http.get<Modelo[]>(this.apiUrl);
+    }
+
+
 }

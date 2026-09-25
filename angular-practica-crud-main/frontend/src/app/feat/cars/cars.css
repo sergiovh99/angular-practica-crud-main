@@ -1,20 +1,181 @@
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .coches {
   width: 100%;
-  padding: 0;
+  min-height: 100dvh;
   margin: 0;
+  padding: 1.5rem 0; 
 }
-.homeIcon{
-      width: 10%;
-    text-align: center;
+
+.title {
+  padding: 0 1.5rem;
 }
-.textTitle{
-  width: 50%;
+
+.container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.tabla-coches {
+  width: 100%;
+  min-width: 100%;
+  max-width: none;
+  margin: 0;
+  border-collapse: collapse;
+}
+.modal-eliminar-backdrop {
+  position: fixed;
+  z-index: 1050;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgb(0 0 0 / 55%);
+}
+
+.modal-eliminar {
+  width: min(100%, 460px);
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 25%);
+}
+
+.modal-eliminar-cabecera,
+.modal-eliminar-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.modal-eliminar-cabecera {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-eliminar-cabecera h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.modal-eliminar-contenido {
+  padding: 20px;
+}
+
+.modal-eliminar-pie {
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #dee2e6;
+}
+
+.texto-advertencia {
+  margin-bottom: 0;
+  color: #dc3545;
+  font-size: 0.9rem;
+}
+
+.btn-cerrar-modal {
+  border: 0;
+  background: transparent;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.btn-eliminar-coche {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.btn-eliminar-coche:hover:not(:disabled) {
+  background-color: #f8d7da;
+}
+
+.btn-eliminar-coche img {
+  width: 18px;
+  height: 18px;
+}
+
+
+.coches {
+  width: 100%;
+  padding: 2rem;
 }
 .title {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  justify-self: center;
   gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.textTitle {
+  margin: 0;
+}
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.addIcon,
+.homeIcon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: white;
+  background-color: #1976d2;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.homeIcon {
+  background-color: #333;
+}
+
+.addIcon:hover,
+.homeIcon:hover {
+  transform: scale(1.06);
+}
+
+.addIcon:hover {
+  background-color: #125ea8;
+}
+
+.homeIcon:hover {
+  background-color: #111;
+}
+
+.addIcon svg,
+.homeIcon svg,
+.detalle svg {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .container {
@@ -25,165 +186,82 @@
 .tabla-coches {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
 }
 
 .tabla-coches th,
 .tabla-coches td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0.9rem 1rem;
   text-align: left;
-  vertical-align: middle;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tabla-coches th {
-  background-color: #f3f4f6;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.celdas {
-  background-color: aliceblue;
-}
-
-.tabla-coches .image {
-  width: 120px;
-}
-.tabla-coches th:nth-child(1),
-.tabla-coches td:nth-child(1) {
-  width: 15%; 
-}
-
-.tabla-coches th:nth-child(2),
-.tabla-coches td:nth-child(2) {
-  width: 23%; 
-}
-
-.tabla-coches th:nth-child(3),
-.tabla-coches td:nth-child(3) {
-  width: 23%; 
-}
-
-.tabla-coches th:nth-child(4),
-.tabla-coches td:nth-child(4) {
-  width: 13%;
-}
-
-.tabla-coches th:nth-child(5),
-.tabla-coches td:nth-child(5) {
-  width: 21%; 
-  text-align: center;
-}
-.tabla-coches th:nth-child(6) {
-  width:5%;
-  text-align: center;
-}
-
-.tabla-coches img {
-  display: block;
-  width: 100%;
-  max-width: 100px;
-  height: 70px;
-  object-fit: contain;
-}
-
-.tabla-coches .marca {
-  font-weight: 600;
-}
-
-.tabla-coches .total {
-  text-align: right;
-  font-weight: 700;
-  white-space: nowrap;
+  border-bottom: 1px solid #ddd;
 }
 
 .ordenable {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
   padding: 0;
   border: 0;
   background: transparent;
   font: inherit;
-  font-weight: 700;
+  font-weight: bold;
   cursor: pointer;
 }
-  .detalle{
-    text-align: -webkit-center !important;
-  }
-@media (max-width: 600px) {
-  .title h1 {
-    font-size: 1.4rem;
-  }
 
-  .container {
-    overflow-x: visible;
-  }
+.detalle a {
+  display: inline-grid;
+  place-items: center;
+  color: #000;
+}
+.botonera {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
 
-  .tabla-coches,
-  .tabla-coches tbody,
-  .tabla-coches tr,
-  .tabla-coches td {
-    display: block;
-    width: 100%;
-  }
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 
-  .tabla-coches {
-    border: 0;
-    background: transparent;
-  }
+  padding: 0.5rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(6px);
+}
 
-  .tabla-coches thead {
-    display: none;
-  }
+.iconButton {
+  display: grid;
+  place-items: center;
 
-  .tabla-coches tr {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background-color: aliceblue;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
-  }
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
 
-  .tabla-coches td {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.55rem 0;
-    border-bottom: 1px solid #dbe5ee;
-    text-align: right;
-  }
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
 
-  .tabla-coches td:last-child {
-    border-bottom: 0;
-  }
+.iconButton svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
 
-  .tabla-coches td::before {
-    content: attr(data-label);
-    font-weight: 700;
-    text-align: left;
-  }
+.addIcon {
+  background-color: #1976d2;
+}
 
-  .tabla-coches td.image {
-    width: 100%;
-    justify-content: center;
-  }
 
-  .tabla-coches td.image::before {
-    display: none;
-  }
+.iconButton:hover {
+  transform: scale(1.08);
+}
 
-  .tabla-coches img {
-    width: 130px;
-    max-width: 100%;
-    height: 90px;
-  }
+.addIcon:hover {
+  background-color: #125ea8;
+}
 
-  .tabla-coches .total {
-    text-align: right;
-  }
+.homeIcon:hover {
+  background-color: #111;
+}
+
+.iconButton:focus-visible {
+  outline: 3px solid #f0b429;
+  outline-offset: 3px;
 }

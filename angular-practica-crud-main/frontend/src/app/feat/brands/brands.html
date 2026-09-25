@@ -1,8 +1,10 @@
 <section class="marcas">
-    <div class="title">
-  <h1>Listado de Marcas</h1>
-  <a routerLink="/" aria-label="Ir a Home">
+    <div class="botonera">
+  <a routerLink="/home" aria-label="Ir a Home" class="homeIcon">
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>home</title><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/></svg>  </a>
+  </div>
+  <div class="title">
+  <h1 class="textTitle">Listado de Marcas</h1>
 </div>
 <div *ngIf="loading">
 <h1>Cargando...</h1>

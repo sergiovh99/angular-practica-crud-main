@@ -1,85 +1,440 @@
 <section class="coches">
+  <div class="botonera">
+    <a
+      [routerLink]="['/cars/new']"
+      aria-label="Crear coche"
+      title="Crear coche"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"
+        />
+      </svg>
+    </a>
+<button
+  type="button"
+  class="btn-exportar-excel"
+  [disabled]="exportandoExcel()"
+  (click)="exportarCochesExcel()"
+  [attr.aria-label]="
+    exportandoExcel()
+      ? 'Exportando coches a Excel'
+      : 'Exportar coches a Excel'
+  "
+  [title]="
+    exportandoExcel()
+      ? 'Exportando...'
+      : 'Exportar a Excel'
+  "
+>
+
+  <span>
+    {{ exportandoExcel() ? 'Exportando...' : 'Exportar Excel' }}
+  </span>
+</button>
+
+    <a
+      routerLink="/home"
+      aria-label="Ir a Home"
+      title="Ir a Home"
+      class="homeIcon"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"
+        />
+      </svg>
+    </a>
+  </div>
+
   <div class="title">
-  <h1 class="textTitle">Listado de coches</h1>
-  <a routerLink="/" aria-label="Ir a Home" class="homeIcon">  
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>home</title><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/></svg>  </a>
-</div>
-<div *ngIf="loading">
-<h1>Cargando...</h1>
-</div>
-<div class="container" *ngIf="!loading">
-  <table class="tabla-coches">
-    <thead>
-      <tr>
-        <th>Imagen</th>
-        <th> 
-          <button
-        type="button"
-        class="ordenable"
-        (click)="ordenarPor('marca')"
-        [attr.aria-sort]="campoOrdenado === 'marca' ? direccionOrden : 'none'"
-      >
-        Marca
-        <span *ngIf="campoOrdenado === 'marca'">
-          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
-        </span>
-      </button></th>
-        <th> <button
-        type="button"
-        class="ordenable"
-        (click)="ordenarPor('modelo')"
-        [attr.aria-sort]="campoOrdenado === 'modelo' ? direccionOrden : 'none'"
-      >
-        Modelo
-        <span *ngIf="campoOrdenado === 'modelo'">
-          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
-        </span>
-      </button></th>
-        <th> <button
-        type="button"
-        class="ordenable"
-        (click)="ordenarPor('total')"
-        [attr.aria-sort]="campoOrdenado === 'total' ? direccionOrden : 'none'"
-      >
-        Total
-        <span *ngIf="campoOrdenado === 'total'">
-          {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
-        </span>
-      </button></th>
-      <th >Ir al detalle</th>
-          <th>
-        <a [routerLink]="['/cars/new']">
-          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>add</title><path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"/></svg>
-        </a>
-      </th>
-    </tr>
+    <h1 class="textTitle">Listado de coches</h1>
+  </div>
 
-    </thead>
+  <div *ngIf="cargandoCoches()" class="loading" role="status">
+    <h2>Cargando coches...</h2>
+  </div>
 
-    <tbody class="celdas">
-      <tr *ngFor="let coche of coches">
-        <td class="image" data-label="Imagen">
-          <img
-            [ngSrc]="coche.imageUrl"
-            [alt]="coche.brand.name + ' ' + coche.model.name"
-            width="100"
-            height="70"
-            priority
-          />
-        </td>
-        <td class="marca" data-label="Marca">{{ coche.brand.name }}</td>
-        <td data-label="Modelo">{{ coche.model.name }}</td>
-        <td data-label="Total">{{ coche.total }}</td>
-        <td data-label="Ir al detalle" class="detalle">
-          <a [routerLink]="['/cars', coche.id]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><title>arrow-right</title><path fill="#000000" d="M4 11v2h12l-5.5 5.5l1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5L16 11z"/></svg>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container" *ngIf="!cargandoCoches()">
+    <table class="tabla-coches">
+      <thead>
+        <tr>
+          <th scope="col">Acciones</th>
+
+          <th scope="col">Imagen</th>
+
+          <th
+            scope="col"
+            class="cabecera-filtrable"
+            [attr.aria-sort]="campoOrdenado === 'marca' ? direccionOrden : 'none'"
+          >
+            <div class="titulo-columna">
+              <button
+                type="button"
+                class="ordenable"
+                (click)="ordenarPor('marca')"
+              >
+                Marca
+
+                <span *ngIf="campoOrdenado === 'marca'" aria-hidden="true">
+                  {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="btn-lupa"
+                [class.activo]="columnaFiltroActiva() === 'marca'"
+                (click)="alternarFiltro('marca')"
+                aria-label="Filtrar por marca"
+                title="Filtrar por marca"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M9.5 3a6.5 6.5 0 0 0 0 13c1.61 0 3.09-.59 4.23-1.57L19.3 20L21 18.3l-5.57-5.57A6.47 6.47 0 0 0 16 9.5A6.5 6.5 0 0 0 9.5 3m0 2A4.5 4.5 0 1 1 5 9.5A4.5 4.5 0 0 1 9.5 5"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div
+              *ngIf="columnaFiltroActiva() === 'marca'"
+              class="contenedor-filtro"
+            >
+              <input
+                type="search"
+                [value]="filtroMarca()"
+                (input)="actualizarFiltroMarca($event)"
+                placeholder="Buscar marca"
+                aria-label="Buscar por marca"
+              />
+
+              <button
+                *ngIf="filtroMarca()"
+                type="button"
+                class="btn-limpiar-filtro"
+                (click)="limpiarFiltroMarca()"
+                aria-label="Limpiar filtro de marca"
+                title="Limpiar filtro"
+              >
+              </button>
+            </div>
+          </th>
+
+          <th
+            scope="col"
+            class="cabecera-filtrable"
+            [attr.aria-sort]="campoOrdenado === 'modelo' ? direccionOrden : 'none'"
+          >
+            <div class="titulo-columna">
+              <button
+                type="button"
+                class="ordenable"
+                (click)="ordenarPor('modelo')"
+              >
+                Modelo
+
+                <span *ngIf="campoOrdenado === 'modelo'" aria-hidden="true">
+                  {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="btn-lupa"
+                [class.activo]="columnaFiltroActiva() === 'modelo'"
+                (click)="alternarFiltro('modelo')"
+                aria-label="Filtrar por modelo"
+                title="Filtrar por modelo"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M9.5 3a6.5 6.5 0 0 0 0 13c1.61 0 3.09-.59 4.23-1.57L19.3 20L21 18.3l-5.57-5.57A6.47 6.47 0 0 0 16 9.5A6.5 6.5 0 0 0 9.5 3m0 2A4.5 4.5 0 1 1 5 9.5A4.5 4.5 0 0 1 9.5 5"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div
+              *ngIf="columnaFiltroActiva() === 'modelo'"
+              class="contenedor-filtro"
+            >
+              <input
+                type="search"
+                [value]="filtroModelo()"
+                (input)="actualizarFiltroModelo($event)"
+                placeholder="Buscar modelo"
+                aria-label="Buscar por modelo"
+              />
+
+              <button
+                *ngIf="filtroModelo()"
+                type="button"
+                class="btn-limpiar-filtro"
+                (click)="limpiarFiltroModelo()"
+                aria-label="Limpiar filtro de modelo"
+                title="Limpiar filtro"
+              >
+
+              </button>
+            </div>
+          </th>
+
+          <th
+            scope="col"
+            [attr.aria-sort]="campoOrdenado === 'total' ? direccionOrden : 'none'"
+          >
+            <button
+              type="button"
+              class="ordenable"
+              (click)="ordenarPor('total')"
+            >
+              Total
+
+              <span *ngIf="campoOrdenado === 'total'" aria-hidden="true">
+                {{ direccionOrden === 'ascending' ? '▲' : '▼' }}
+              </span>
+            </button>
+          </th>
+
+          <th scope="col">Ir al detalle</th>
+        </tr>
+      </thead>
+
+      <tbody class="celdas">
+        <tr *ngFor="let coche of cochesFiltrados()">
+          <td data-label="Acciones">
+            <button
+              type="button"
+              class="btn-eliminar-coche"
+              aria-label="Eliminar coche"
+              title="Eliminar coche"
+              [disabled]="eliminandoCoche"
+              (click)="solicitarEliminarCoche(coche)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"
+                />
+              </svg>
+            </button>
+          </td>
+
+          <td class="image" data-label="Imagen">
+            <img
+              [ngSrc]="coche.imageUrl"
+              [alt]="coche.brand.name + ' ' + coche.model.name"
+              width="100"
+              height="70"
+            />
+          </td>
+
+          <td class="marca" data-label="Marca">
+            {{ coche.brand.name }}
+          </td>
+
+          <td data-label="Modelo">
+            {{ coche.model.name }}
+          </td>
+
+          <td data-label="Total">
+            {{ coche.total }}
+          </td>
+
+          <td data-label="Ir al detalle" class="detalle">
+            <a
+              [routerLink]="['/cars', coche.id]"
+              [attr.aria-label]="'Ver detalle de ' + coche.brand.name + ' ' + coche.model.name"
+              title="Ver detalle"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M4 11v2h12l-5.5 5.5l1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5L16 11z"
+                />
+              </svg>
+            </a>
+          </td>
+        </tr>
+
+        <tr *ngIf="coches().length > 0 && cochesFiltrados().length === 0">
+          <td colspan="6" class="sin-resultados">
+            No hay coches que coincidan con los filtros seleccionados.
+          </td>
+        </tr>
+      </tbody>
+<div
+  *ngIf="meta?.hasPreviousPage || meta?.hasNextPage"
+  class="paginacion"
+>
+  <button
+    *ngIf="meta?.hasPreviousPage"
+    type="button"
+    (click)="paginaAnterior()"
+    aria-label="Ir a la página anterior"
+    title="Página anterior"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1.78em"
+      height="1em"
+      viewBox="0 0 16 9"
+      aria-hidden="true"
+    >
+      <path
+        fill="currentColor"
+        d="M12.5 5h-9c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h9c.28 0 .5.22.5.5s-.22.5-.5.5"
+      />
+      <path
+        fill="currentColor"
+        d="M6 8.5a.47.47 0 0 1-.35-.15l-3.5-3.5c-.2-.2-.2-.51 0-.71L5.65.65c.2-.2.51-.2.71 0s.2.51 0 .71L3.21 4.51l3.15 3.15c.2.2.2.51 0 .71c-.1.1-.23.15-.35.15Z"
+      />
+    </svg>
+  </button>
+
+  <span *ngIf="meta">
+    Página {{ meta.currentPage }} de {{ meta.totalPages }}
+  </span>
+
+  <button
+    *ngIf="meta?.hasNextPage"
+    type="button"
+    (click)="paginaSiguiente()"
+    aria-label="Ir a la página siguiente"
+    title="Página siguiente"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1.78em"
+      height="1em"
+      viewBox="0 0 16 9"
+      aria-hidden="true"
+    >
+      <path
+        fill="currentColor"
+        d="M12.5 5h-9c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h9c.28 0 .5.22.5.5s-.22.5-.5.5"
+      />
+      <path
+        fill="currentColor"
+        d="M10 8.5a.47.47 0 0 1-.35-.15c-.2-.2-.2-.51 0-.71l3.15-3.15l-3.15-3.15c-.2-.2-.51 0-.71s.51-.2.71 0l3.5 3.5c.2.2.2.51 0 .71l-3.5 3.5c-.1.1-.23.15-.35.15Z"
+      />
+    </svg>
+  </button>
 </div>
-  <p *ngIf="!loading && !error && coches.length === 0">
-    No hay coches disponibles.
-  </p>
+
+    </table>
+
+    <p
+      *ngIf="!error && coches().length === 0"
+      class="sin-resultados"
+    >
+      No hay coches disponibles.
+    </p>
+
+    <p *ngIf="error" class="error-campo" role="alert">
+      {{ error }}
+    </p>
+  </div>
+
+  <div
+    *ngIf="cocheAEliminar"
+    class="modal-eliminar-backdrop"
+    role="presentation"
+  >
+    <div
+      class="modal-eliminar"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-modal-eliminar"
+    >
+      <div class="modal-eliminar-cabecera">
+        <h2 id="titulo-modal-eliminar">Eliminar coche</h2>
+
+        <button
+          type="button"
+          class="btn-cerrar-modal"
+          aria-label="Cerrar"
+          [disabled]="eliminandoCoche"
+          (click)="cancelarEliminarCoche()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="modal-eliminar-contenido">
+        <p>
+          ¿Seguro que quieres eliminar el coche
+          <strong>
+            {{ cocheAEliminar.brand.name }}
+            {{ cocheAEliminar.model.name }}
+          </strong>?
+        </p>
+
+        <p class="texto-advertencia">
+          Esta acción no se puede deshacer.
+        </p>
+      </div>
+
+      <div class="modal-eliminar-pie">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          [disabled]="eliminandoCoche"
+          (click)="cancelarEliminarCoche()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          [disabled]="eliminandoCoche"
+          (click)="confirmarEliminarCoche()"
+        >
+          {{ eliminandoCoche ? 'Eliminando...' : 'Eliminar coche' }}
+        </button>
+      </div>
+    </div>
+  </div>
 </section>

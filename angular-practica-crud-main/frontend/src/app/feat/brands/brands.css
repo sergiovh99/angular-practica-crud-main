@@ -1,65 +1,119 @@
-.title{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .marcas {
-        display: flex;
-    flex-direction: column;
+  width: 100%;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 1.5rem 0; 
 }
-table {
-    border: 1px solid;
-    border-radius: 4px;
+.textTitle {
+  margin: 0;
+}
+.title {
+     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    justify-self: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-
-.container{
-     width: 100%;
+.container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   overflow-x: auto;
 }
 
-.tabla-marcas{
-    width: 100%;
+.tabla-marcas {
+  width: 100%;
+  min-width: 100%;
+  max-width: none;
+  margin: 0;
   border-collapse: collapse;
-  background: #fff;
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
 }
+
 .tabla-marcas th,
 .tabla-marcas td {
-  padding: clamp(0.5rem, 1.5vw, 1rem);
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0.9rem 1rem;
   text-align: left;
-  vertical-align: middle;
+  border-bottom: 1px solid #ddd;
 }
 
-.tabla-marcas th {
-  background-color: #f3f4f6;
-  font-weight: 700;
-  white-space: nowrap;
+.ordenable {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.tabla-marcas .image {
-  width: clamp(70px, 12vw, 130px);
+.marcas > p {
+  margin-top: 1.5rem;
 }
 
-.tabla-marcas img {
-  display: block;
-  width: 100%;
-  max-width: 120px;
-  height: auto;
-  max-height: 90px;
-  object-fit: contain;
+.addIcon,
+.homeIcon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: white;
+  background-color: #1976d2;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
-.tabla-marcas .marca {
-  font-weight: 600;
+.homeIcon {
+  background-color: #333;
 }
 
-.tabla-marcas .total {
-  text-align: right;
-  font-weight: 700;
-  white-space: nowrap;
+.addIcon:hover,
+.homeIcon:hover {
+  transform: scale(1.06);
 }
-.celdas{
-      background-color: aliceblue;
+
+.addIcon:hover {
+  background-color: #125ea8;
+}
+
+.homeIcon:hover {
+  background-color: #111;
+}
+
+.addIcon svg,
+.homeIcon svg,
+.detalle svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.botonera {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  padding: 0.5rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(6px);
 }

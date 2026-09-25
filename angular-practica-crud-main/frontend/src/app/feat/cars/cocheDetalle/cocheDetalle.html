@@ -11,148 +11,504 @@
       </svg>
     </a>
 
-    <a routerLink="/" aria-label="Ir a inicio" class="homeIcon">
+    <a routerLink="/home" aria-label="Ir a inicio" class="homeIcon">
       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
         <title>Inicio</title>
         <path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"/>
       </svg>
     </a>
-  </div>
+<div class="documento-accion">
+  <input
+    #documentInput
+    type="file"
+    hidden
+    accept=".pdf,.jpg,.jpeg,.png"
+    (change)="onDocumentosSeleccionados($event)"
+  />
 
+  <button
+    type="button"
+    class="btn-adjuntar-documento"
+    aria-label="Adjuntar documento"
+    title="Adjuntar documento"
+    (click)="documentInput.click()"
+    [disabled]="loading"
+  >
+<svg xmlns="http://www.w3.org/2000/svg" color="black" width="1em" height="1em" viewBox="0 0 24 24"><title>upload</title><path fill="currentColor" d="M11 16V7.85l-2.6 2.6L7 9l5-5l5 5l-1.4 1.45l-2.6-2.6V16zm-5 4q-.825 0-1.412-.587T4 18v-3h2v3h12v-3h2v3q0 .825-.587 1.413T18 20z"/></svg>
+  </button>
+
+  <span *ngIf="!documentoSeleccionado">
+    Adjuntar documento
+  </span>
+
+  <div *ngIf="documentoSeleccionado" class="documento-seleccionado">
+    <span>{{ documentoSeleccionado.name }}</span>
+
+    <button
+      type="button"
+      class="btn-eliminar-documento"
+      aria-label="Eliminar documento"
+      title="Eliminar documento"
+      (click)="eliminarDocumento()"
+    >
+      ×
+    </button>
+  </div>
+</div>
+
+  </div>
   <div *ngIf="loading">
     <h1>Cargando...</h1>
   </div>
 
-  <form
-    *ngIf="!loading"
-    [formGroup]="formulario"
-    (ngSubmit)="guardar()"
+<form
+  *ngIf="!loading"
+  [formGroup]="formulario"
+  (ngSubmit)="guardar()"
+  novalidate
+>
+  <div class="form-field">
+    <label for="brandId">Marca</label>
+
+    <select
+      id="brandId"
+      formControlName="brandId"
+      [class.input-error]="
+        formulario.get('brandId')?.invalid &&
+        formulario.get('brandId')?.touched
+      "
+    >
+      <option value="" disabled>Selecciona una marca</option>
+
+      <option *ngFor="let marca of marcas()" [value]="marca.id">
+        {{ marca.name }}
+      </option>
+    </select>
+
+    <p
+      *ngIf="
+        formulario.get('brandId')?.hasError('required') &&
+        formulario.get('brandId')?.touched
+      "
+      class="error-campo"
+      role="alert"
+    >
+      La marca es obligatoria.
+    </p>
+  </div>
+
+  <div class="form-field">
+    <label for="modelId">Modelo</label>
+
+    <select
+      id="modelId"
+      formControlName="modelId"
+      [class.input-error]="
+        formulario.get('modelId')?.invalid &&
+        formulario.get('modelId')?.touched
+      "
+    >
+      <option value="" disabled>Selecciona un modelo</option>
+
+      <option *ngFor="let modelo of modelos()" [value]="modelo.id">
+        {{ modelo.name }}
+      </option>
+    </select>
+
+    <p
+      *ngIf="
+        formulario.get('modelId')?.hasError('required') &&
+        formulario.get('modelId')?.touched
+      "
+      class="error-campo"
+      role="alert"
+    >
+      El modelo es obligatorio.
+    </p>
+
+    <p
+      *ngIf="
+        formulario.get('modelId')?.hasError('modeloYaRegistrado') &&
+        formulario.get('modelId')?.touched
+      "
+      class="error-campo"
+      role="alert"
+    >
+      Ya existe un coche registrado con la marca y el modelo seleccionados.
+    </p>
+  </div>
+
+  <section formArrayName="carDetails">
+    <h2>Detalles del coche</h2>
+
+    <div
+      *ngFor="let detalle of carDetails.controls; let i = index"
+      [formGroupName]="i"
+      class="detalle-coche"
+    >
+      <h3>Detalle {{ i + 1 }}</h3>
+
+<div class="form-field">
+  <label [for]="'licensePlate-' + i">Matrícula</label>
+
+  <input
+    [id]="'licensePlate-' + i"
+    type="text"
+    formControlName="licensePlate"
+    placeholder="1234 BBB"
+    maxlength="8"
+    autocomplete="off"
+    style="text-transform: uppercase"
+    [class.input-error]="
+      carDetails.at(i).get('licensePlate')?.invalid &&
+      carDetails.at(i).get('licensePlate')?.touched
+    "
+  />
+
+  <p
+    *ngIf="
+      carDetails.at(i).get('licensePlate')?.hasError('pattern') &&
+      carDetails.at(i).get('licensePlate')?.touched
+    "
+    class="error-campo"
+    role="alert"
   >
-    <div>
-      <label for="brandId">ID de marca</label>
-      <input id="brandId" type="text" formControlName="brandId">
-    </div>
-
-    <div>
-      <label for="modelId">ID de modelo</label>
-      <input id="modelId" type="text" formControlName="modelId">
-    </div>
-
-    <section formArrayName="carDetails">
-      <h2>Detalles del coche</h2>
-
-      <div
-        *ngFor="let detalle of carDetails.controls; let i = index"
-        [formGroupName]="i"
-      >
-        <h3>Detalle {{ i + 1 }}</h3>
-
-        <div>
-          <label [for]="'licensePlate-' + i">Matrícula</label>
-          <input
-            [id]="'licensePlate-' + i"
-            type="text"
-            formControlName="licensePlate"
-            placeholder="1234 ABC"
-            min="7"
-            max="7"
-          >
-        </div>
-
- <div>
-  <label [for]="'manufactureYear-' + i">Año de fabricación</label>
-
-  <select
-    [id]="'manufactureYear-' + i"
-    formControlName="manufactureYear"
-  >
-    <option [ngValue]="null" disabled>Selecciona un año</option>
-
-    <option *ngFor="let year of years" [ngValue]="year">
-      {{ year }}
-    </option>
-  </select>
+    La matrícula debe contener 4 números y 3 letras y no contener vocales.
+  </p>
 </div>
 
-        <div>
-          <label [for]="'mileage-' + i">Kilometraje</label>
-          <input
-            [id]="'mileage-' + i"
-            type="number"
-            formControlName="mileage"
-            min = "0"
-          >
-        </div>
 
-        <div>
-          <label [for]="'price-' + i">Precio</label>
-          <input
-            [id]="'price-' + i"
-            type="number"
-            formControlName="price"
-            min="1"
-          >
-        </div>
-
-        <div>
-          <label [for]="'currency-' + i">Moneda</label>
-          <select [id]="'currency-' + i" formControlName="currency">
-            <option *ngFor="let currency of currencies" [value]="currency">
-              {{ currency }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label [for]="'registrationDate-' + i">Fecha de matriculación</label>
-          <input
-            [id]="'registrationDate-' + i"
-            type="date"
-            formControlName="registrationDate"
-          >
-        </div>
-
-        <div>
-          <label [for]="'color-' + i">Color</label>
-          <input
-            [id]="'color-' + i"
-            type="text"
-            formControlName="color"
-          >
-        </div>
-
-        <div>
-          <label [for]="'description-' + i">Descripción</label>
-          <textarea
-            [id]="'description-' + i"
-            formControlName="description"
-          ></textarea>
-        </div>
-
-        <label>
-          <input type="checkbox" formControlName="availability">
-          Disponible
+      <div class="form-field">
+        <label [for]="'manufactureYear-' + i">
+          Año de fabricación
         </label>
 
-        <button
-          type="button"
-          (click)="eliminarDetalle(i)"
+        <select
+          [id]="'manufactureYear-' + i"
+          formControlName="manufactureYear"
+          [class.input-error]="
+            carDetails.at(i).get('manufactureYear')?.invalid &&
+            carDetails.at(i).get('manufactureYear')?.touched
+          "
         >
-          Eliminar detalle
-        </button>
+          <option [ngValue]="null" disabled>Selecciona un año</option>
 
-        <hr>
+          <option *ngFor="let year of years" [ngValue]="year">
+            {{ year }}
+          </option>
+        </select>
+
+        <p
+          *ngIf="
+            carDetails.at(i).get('manufactureYear')?.hasError('required') &&
+            carDetails.at(i).get('manufactureYear')?.touched
+          "
+          class="error-campo"
+          role="alert"
+        >
+          El año de fabricación es obligatorio.
+        </p>
+
+  <p
+  *ngIf="
+    formulario.hasError('anoFabricacionInvalido') &&
+    (formulario.touched || formulario.dirty)
+  "
+  class="error-campo"
+  role="alert"
+>
+  El año de fabricación debe ser igual o anterior al año de matriculación.
+</p>
+
+
       </div>
-    </section>
 
-    <button type="button" (click)="agregarDetalle()">
-      Añadir otro detalle
-    </button>
+      <div class="form-field">
+        <label [for]="'mileage-' + i">Kilometraje</label>
 
-    <p *ngIf="error">{{ error }}</p>
+        <input
+          [id]="'mileage-' + i"
+          type="number"
+          formControlName="mileage"
+          min="0"
+          [class.input-error]="
+            carDetails.at(i).get('mileage')?.invalid &&
+            carDetails.at(i).get('mileage')?.touched
+          "
+        />
 
-    <button type="submit" [disabled]="loading || formulario.invalid">
-      {{ loading ? 'Guardando...' : (cocheFlag ? 'Crear coche' : 'Guardar cambios') }}
-    </button>
-  </form>
+        <p
+          *ngIf="
+            carDetails.at(i).get('mileage')?.hasError('required') &&
+            carDetails.at(i).get('mileage')?.touched
+          "
+          class="error-campo"
+          role="alert"
+        >
+          El kilometraje es obligatorio.
+        </p>
+
+        <p
+          *ngIf="
+            carDetails.at(i).get('mileage')?.hasError('min') &&
+            carDetails.at(i).get('mileage')?.touched
+          "
+          class="error-campo"
+          role="alert"
+        >
+          El kilometraje no puede ser negativo.
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label [for]="'price-' + i">Precio</label>
+
+        <input
+          [id]="'price-' + i"
+          type="number"
+          formControlName="price"
+          min="1"
+          [class.input-error]="
+            carDetails.at(i).get('price')?.invalid &&
+            carDetails.at(i).get('price')?.touched
+          "
+        />
+
+        <p
+          *ngIf="
+            carDetails.at(i).get('price')?.hasError('required') &&
+            carDetails.at(i).get('price')?.touched
+          "
+          class="error-campo"
+          role="alert"
+        >
+          El precio es obligatorio.
+        </p>
+
+        <p
+          *ngIf="
+            carDetails.at(i).get('price')?.hasError('min') &&
+            carDetails.at(i).get('price')?.touched
+          "
+          class="error-campo"
+          role="alert"
+        >
+          El precio debe ser mayor que cero.
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label [for]="'currency-' + i">Moneda</label>
+
+        <select
+          [id]="'currency-' + i"
+          formControlName="currency"
+        >
+          <option *ngFor="let currency of currencies" [value]="currency">
+            {{ currency }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label [for]="'registrationDate-' + i">
+          Fecha de matriculación
+        </label>
+
+        <input
+          [id]="'registrationDate-' + i"
+          type="date"
+          formControlName="registrationDate"
+        />
+
+        <p
+          *ngIf="
+            carDetails.at(i).get('registrationDate')?.hasError('required') &&
+            carDetails.at(i).get('registrationDate')?.touched
+          "
+          class="error-campo"
+          role="alert"
+        >
+          La fecha de matriculación es obligatoria.
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label [for]="'color-' + i">Color</label>
+
+        <input
+          [id]="'color-' + i"
+          type="text"
+          formControlName="color"
+        />
+      </div>
+
+      <div class="form-field">
+        <label [for]="'description-' + i">Descripción</label>
+
+        <textarea
+          [id]="'description-' + i"
+          formControlName="description"
+        ></textarea>
+      </div>
+
+      <label class="checkbox-field">
+        <input type="checkbox" formControlName="availability" />
+        Disponible
+      </label>
+
+      <button
+        type="button"
+        class="btn-eliminar-detalle"
+        (click)="eliminarDetalle(i)"
+      >
+        Eliminar detalle
+      </button>
+
+      <hr />
+    </div>
+  </section>
+
+  <button
+    type="button"
+    class="btn-anadir-detalle"
+    (click)="agregarDetalle()"
+    [disabled]="loading"
+  >
+    Añadir otro detalle
+  </button>
+
+  <p *ngIf="error" class="mensaje-error-login" role="alert">
+    {{ error }}
+  </p>
+
+<button
+  type="submit"
+  class="btn-guardar"
+  [disabled]="loading"
+  (click)="comprobarClickCrear($event)"
+>
+  {{
+    loading
+      ? 'Guardando...'
+      : (cocheFlag ? 'Crear coche' : 'Guardar cambios')
+  }}
+</button>
+
+
+</form>
+
+
+<div
+  *ngIf="mostrarModalDocumento"
+  class="modal-documento-backdrop"
+  role="presentation"
+>
+  <div
+    class="modal-documento"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-modal-documento"
+  >
+    <div class="modal-documento-cabecera">
+      <h2 id="titulo-modal-documento">Datos del documento</h2>
+
+      <button
+        type="button"
+        class="btn-cerrar-modal"
+        aria-label="Cerrar"
+        (click)="cancelarDocumento()"
+      >
+        ×
+      </button>
+    </div>
+
+    <div [formGroup]="formularioDocumento" class="modal-documento-contenido">
+      <p *ngIf="documentoSeleccionado">
+        Archivo: <strong>{{ documentoSeleccionado.name }}</strong>
+      </p>
+
+      <div class="mb-3">
+        <label for="documentType">Tipo de documento</label>
+
+        <select
+    id="documentType"
+    class="form-select"
+    formControlName="documentType"
+  >
+    <option value="" disabled>Selecciona un tipo</option>
+    <option value="inspection">Inspección</option>
+    <option value="invoice">Factura</option>
+    <option value="insurance">Seguro</option>
+    <option value="registration">Matriculación</option>
+    <option value="other">Otro</option>
+  </select>
+
+        <div
+          *ngIf="
+            formularioDocumento.get('documentType')?.invalid &&
+            formularioDocumento.get('documentType')?.touched
+          "
+          class="text-danger"
+        >
+          El tipo de documento es obligatorio.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="documentTitle">Título</label>
+
+        <input
+          id="documentTitle"
+          type="text"
+          class="form-control"
+          formControlName="title"
+          placeholder="Ej.: Ficha técnica ITV"
+        />
+
+        <div
+          *ngIf="
+            formularioDocumento.get('title')?.invalid &&
+            formularioDocumento.get('title')?.touched
+          "
+          class="text-danger"
+        >
+          El título es obligatorio.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="documentDescription">Descripción</label>
+
+        <textarea
+          id="documentDescription"
+          class="form-control"
+          formControlName="description"
+          rows="4"
+          maxlength="500"
+          placeholder="Descripción opcional"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="modal-documento-pie">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="cancelarDocumento()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="confirmarDocumento()"
+      >
+        Confirmar documento
+      </button>
+    </div>
+  </div>
+</div>
+
 </section>
